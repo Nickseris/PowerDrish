@@ -62,7 +62,7 @@ class Enemy(GameSprite):
     def kill(self):
 
         if self.rect.colliderect(player.rect):
-            
+            pass
 
 win_width = 700
 win_height = 500
@@ -74,8 +74,8 @@ window = display.set_mode((win_width, win_height))
 FPS = 60
 
 # персонажы
-player = Player('cool_guy.png', win_width/2, win_height/2, 30, 50, 6, 6)
-monster = Enemy('monster.jpg', win_width/2, 60, 60, 80, 3, 3)
+player = Player('drish.png', win_width/2, win_height/2, 60, 60, 6, 6)
+monster = Enemy('monster.png', win_width/2, 50, 80, 75, 3, 3)
 ''' должно быть хп тут '''
 
 # Основной цикл игры:
