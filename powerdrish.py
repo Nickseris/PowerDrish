@@ -39,14 +39,20 @@ class Player(GameSprite):
 
 class Enemy(GameSprite):
     # метод для автоматического управления ботов
+    direction_x = "left"
+    direction_y = "up"
     # горризонтальное передвижение
     def horizontally_update(self, start_pos, end_pos):
-        if self.rect.x >= start_pos and self.rect.x <= end_pos:
-            self.rect.x += self.speedx
-        else:
+        if self.rect.x <= start_pos:
+            self.direction = "right"
+        if self.rect.x >= end_pos:
+            self.direction = "left"
+        if self.direction == 'left':
             self.rect.x -= self.speedx
+        else:
+            self.rect.x += self.speedx
 
-    # вертикальное передвижение
+    # вертикальне передвижение
     def vertically_update(self, start_pos, end_pos):
         if self.rect.y >= start_pos and self.rect.y <= end_pos:
             self.rect.y += self.speedy
@@ -65,7 +71,7 @@ window = display.set_mode((win_width, win_height))
 
 # персонажы
 player = Player('cool_guy.png', win_width/2, win_height/2, 30, 50, 15, 15)
-
+dirty_monster = Enemy('dirty_monster.png', win_width/2, 60, 60, 80, 6, 6)
 
 # Основной цикл игры:
 run = True # флаг сбрасывается кнопкой закрытия окна
@@ -81,7 +87,10 @@ while run:
     # обновляем фон
     window.fill(WHITE)
     player.update()
+    dirty_monster.horizontally_update(60, 150)
+    dirty_monster.reset()
     player.reset()
+    
     # FPS
     display.update()
     clock.tick(60)
