@@ -32,9 +32,9 @@ class Player(GameSprite):
             self.rect.y -= self.speedy
         if keys[K_s] and self.rect.bottom < win_height:
             self.rect.y += self.speedy
-        if keys[K_a] and self.rect.left >= 0:
+        if keys[K_a] and self.rect.left > 0:
             self.rect.x -= self.speedx
-        if keys[K_d] and self.rect.right <= win_width:
+        if keys[K_d] and self.rect.right < win_width:
             self.rect.x += self.speedx
 
 class Enemy(GameSprite):
