@@ -1,4 +1,6 @@
 from pygame import *
+font.init()
+
 
 WHITE = (255, 255, 255)
 
@@ -22,6 +24,13 @@ class GameSprite(sprite.Sprite):
  # метод, отрисовывающий героя на окне
     def reset(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
+    
+    def check_goal(self):
+        global run
+        if self.rect.colliderect(player.rect):
+            window.blit(win, (215, win_height/2))
+
+
 
 # класс главного игрока
 class Player(GameSprite):
@@ -58,11 +67,13 @@ class Enemy(GameSprite):
             self.rect.y += self.speedy
         else:
             self.rect.y -= self.speedy
+
     # смерть
     def kill(self):
-
+        global run
         if self.rect.colliderect(player.rect):
-            pass
+            window.blit(lose, (215, win_height/2))
+            
 
 win_width = 700
 win_height = 500
@@ -73,9 +84,16 @@ display.set_caption("PowerDrish")
 window = display.set_mode((win_width, win_height))
 FPS = 60
 
+
+# текст
+font = font.SysFont(None, 70)
+lose = font.render("You lose ;(", True, (139, 0, 0))
+win = font.render("You win ;)", True, (0, 139, 0))
+
 # персонажы
 player = Player('drish.png', win_width/2, win_height/2, 60, 60, 6, 6)
-monster = Enemy('monster.png', win_width/2, 50, 80, 75, 3, 3)
+monsterforrest = Enemy('monster.png', win_width/2, 50, 72, 62, 3, 3)
+goal = GameSprite('goal.png', win_width/2, 100, 50, 50, 0, 0)
 ''' должно быть хп тут '''
 
 # Основной цикл игры:
@@ -89,14 +107,21 @@ while run:
             run = False
 
     # сама игра: действия спрайтов, проверка правил игры, перерисовка
-    # обновляем фон
+    # обновляем фон и персонажей
     window.fill(WHITE)
     player.update()
-    monster.horizontally_update(150, win_width-150)
-    monster.reset()
+    monsterforrest.horizontally_update(150, win_width-150)
+
+    # отрисовка
+    monsterforrest.reset()
     player.reset()
-    
-    monster.kill()
+    goal.reset()
+
+    # проверка на убийство игрока монстром 
+    monsterforrest.kill()
+
+    # проверка: игрока зашел в зону выигрыша?
+    goal.check_goal()
 
     # FPS
     display.update()
