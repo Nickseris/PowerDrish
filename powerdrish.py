@@ -4,15 +4,110 @@ font.init()
 
 WHITE = (255, 255, 255)
 
+
 def reset_level():
     player.rect.x, player.rect.y = player_x, player_y
-    monsterforrest.rect.x, monsterforrest.rect.y = monster_x, monster_y
+    monster1.rect.x, monster1.rect.y = monster_x1, monster_y1
+    monster2.rect.x, monster2.rect.y = monster_x2, monster_y2
     goal.rect.x, goal.rect.y = goal_x, goal_y
 
 def next_level0():
     player.rect.x, player.rect.y = player_x, player_y
-    monsterforrest.rect.x, monsterforrest.rect.y = monster_x, monster_y
+    monster1.rect.x, monster1.rect.y = monster_x1, monster_y1
+    monster2.rect.x, monster2.rect.y = monster_x2, monster_y2
     goal.rect.x, goal.rect.y = goal_x, goal_y
+
+
+def tutorial_lev():
+    # обновляем фон и персонажей
+    window.fill(WHITE)
+    window.blit(tutorial, (0, 0))
+    player.update()
+    monster1.horizontally_update(0, win_width)
+
+    # отрисовка
+    monster1.reset()
+    player.reset()
+    goal.reset()
+
+    # проверка на убийство игрока монстром 
+    monster1.kill()
+
+    # проверка: игрока зашел в зону выигрыша?
+    goal.check_goal()
+
+def forest_lev():
+    global monster_x1, monster_y1, player_x, player_y, goal_x, goal_y
+    # обновляем фон и персонажей
+    window.blit(back_forest, (0, 0))
+
+    # передвижение спрайтов
+    monster_x1, monster_y1 = win_width/2, win_height/2
+    player_x, player_y = 150, win_height/2
+    goal_x, goal_y = win_width-150, win_height/2
+    player.update()
+    monster1.vertically_update(0, win_height)
+
+    # отрисовка
+    monster1.reset()
+    player.reset()
+    goal.reset()
+
+    # проверка на убийство игрока монстром 
+    monster1.kill()
+
+    # проверка: игрока зашел в зону выигрыша?
+    goal.check_goal()
+
+def egept_lev():
+    global monster_x1, monster_y1, monster_x2, monster_y2, player_x, player_y, goal_x, goal_y
+    # обновляем фон и персонажей
+    window.blit(back_egept, (0, 0))
+
+    # передвижение спрайтов
+    monster_x1, monster_y1 = win_width/2, win_height/2
+    monster_x2, monster_y2 = win_width-200, win_height/2
+    player_x, player_y = 150, win_height/2
+    goal_x, goal_y = win_width-150, win_height/2
+    player.update()
+    monster1.vertically_update(0, win_height)
+    monster2.horizontally_update(0, win_width)
+
+    # отрисовка
+    monster1.reset()
+    monster2.reset()
+    player.reset()
+    goal.reset()
+
+    # проверка на убийство игрока монстром 
+    monster1.kill()
+    monster2.kill()
+
+    # проверка: игрока зашел в зону выигрыша?
+    goal.check_goal()
+
+def space_lev():
+    global monster_x1, monster_y1, player_x, player_y, goal_x, goal_y
+    # обновляем фон и персонажей
+    window.blit(back_space, (0, 0))
+
+    # передвижение спрайтов
+    monster_x1, monster_y1 = win_width/2, win_height/2
+    player_x, player_y = 150, win_height/2
+    goal_x, goal_y = win_width-150, win_height/2
+    player.update()
+    monster1.vertically_update(0, win_height)
+
+    # отрисовка
+    monster1.reset()
+    player.reset()
+    goal.reset()
+
+    # проверка на убийство игрока монстром 
+    monster1.kill()
+
+    # проверка: игрока зашел в зону выигрыша?
+    goal.check_goal()
 
 # класс-родитель для других спрайтов
 class GameSprite(sprite.Sprite):
@@ -36,11 +131,11 @@ class GameSprite(sprite.Sprite):
         window.blit(self.image, (self.rect.x, self.rect.y))
     
     def check_goal(self):
-        global finish, level
+        global finish, level, check
         if self.rect.colliderect(player.rect):
             finish = True
             window.blit(win, (215, win_height/2))
-            level = 1
+            check = True
 
 # класс главного игрока
 class Player(GameSprite):
@@ -90,7 +185,7 @@ class Enemy(GameSprite):
             finish = True
             window.blit(lose, (215, win_height/2))
             
-
+# настройки игры
 win_width = 700
 win_height = 500
 clock = time.Clock()
@@ -98,24 +193,32 @@ icon = image.load('power.png')
 display.set_icon(icon)
 display.set_caption("PowerDrish")
 window = display.set_mode((win_width, win_height))
-back = transform.scale(image.load("forrest#1.jpg"), (700, 500))
+
+back_forest = transform.scale(image.load("forrest#1.jpg"), (700, 500))
+back_egept = transform.scale(image.load("egept.jpg"), (700, 500))
+back_space = transform.scale(image.load("universe.jpg"), (700, 500))
+
 FPS = 60
 killing = False
-
+check = False
 
 # текст
-font = font.SysFont(None, 70)
-lose = font.render("You lose ;(", True, (139, 0, 0))
-win = font.render("You win ;)", True, (0, 139, 0))
+font_l_w = font.SysFont(None, 70)
+font_tutor = font.SysFont(None, 27)
+lose = font_l_w.render("You lose ;(", True, (139, 0, 0))
+win = font_l_w.render("You win ;)", True, (0, 139, 0))
+tutorial = font_tutor.render("This is a tutorial!!! U can move on WSDA and press button 'SPACE' when u die...)", True, (0, 139, 0))
 
 # местоположение
 player_x, player_y = win_width/2, 400
-monster_x, monster_y = win_width/2, 150
+monster_x1, monster_y1 = win_width/2, 150
+monster_x2, monster_y2 = 0, 0
 goal_x, goal_y = win_width/2, 50
 
 # персонажы
 player = Player('drish.png', player_x, player_y, 60, 60, 6, 6)
-monsterforrest = Enemy('monster.png', monster_x, monster_y, 72, 62, 3, 3)
+monster1 = Enemy('monster.png', monster_x1, monster_y1, 72, 62, 3, 3)
+monster2 = Enemy('monster.png', monster_x2, monster_y2, 72, 62, 3, 3)
 goal = GameSprite('goal.png', goal_x, goal_y, 50, 50, 0, 0)
 ''' должно быть хп тут '''
 
@@ -136,44 +239,20 @@ while run:
         
         # сама игра: действия спрайтов, проверка правил игры, перерисовка
         if level == 0:
-            # обновляем фон и персонажей
-            window.fill(WHITE)
-
-            player.update()
-            monsterforrest.horizontally_update(0, win_width)
-
-            # отрисовка
-            monsterforrest.reset()
-            player.reset()
-            goal.reset()
-
-            # проверка на убийство игрока монстром 
-            monsterforrest.kill()
-
-            # проверка: игрока зашел в зону выигрыша?
-            goal.check_goal()
+            tutorial_lev()
 
         if level == 1:
-            # обновляем фон и персонажей
-            window.blit(back, (0, 0))
+            forest_lev()
 
-            # передвижение спрайтов
-            monster_x, monster_y = win_width/2, win_height/2
-            player_x, player_y = 150, win_height/2
-            goal_x, goal_y = win_width-150, win_height/2
-            player.update()
-            monsterforrest.vertically_update(0, win_height)
+        if level == 2:
+            egept_lev()
 
-            # отрисовка
-            monsterforrest.reset()
-            player.reset()
-            goal.reset()
+        if level == 3:
+            space_lev()
 
-            # проверка на убийство игрока монстром 
-            monsterforrest.kill()
-
-            # проверка: игрока зашел в зону выигрыша?
-            goal.check_goal()
+    if check:
+        level += 1
+        check = False
 
     else:
         keys = key.get_pressed()
