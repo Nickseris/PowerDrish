@@ -11,6 +11,7 @@ def reset_level():
     monster2.rect.x, monster2.rect.y = monster_x2, monster_y2
     goal.rect.x, goal.rect.y = goal_x, goal_y
 
+
 def next_level0():
     player.rect.x, player.rect.y = player_x, player_y
     monster1.rect.x, monster1.rect.y = monster_x1, monster_y1
@@ -131,11 +132,13 @@ class GameSprite(sprite.Sprite):
         window.blit(self.image, (self.rect.x, self.rect.y))
     
     def check_goal(self):
-        global finish, level, check
+        global finish, check, for_keys
         if self.rect.colliderect(player.rect):
             finish = True
-            window.blit(win, (215, win_height/2))
             check = True
+            for_keys = True
+            window.blit(win, (215, win_height/2))
+
 
 # класс главного игрока
 class Player(GameSprite):
@@ -201,6 +204,7 @@ back_space = transform.scale(image.load("universe.jpg"), (700, 500))
 FPS = 60
 killing = False
 check = False
+for_keys = False
 
 # текст
 font_l_w = font.SysFont(None, 70)
@@ -260,7 +264,7 @@ while run:
             finish = False
             reset_level()
         
-        if keys[K_SPACE] and killing == False:
+        if keys[K_SPACE] and check == False and for_keys == True:
             finish = False
             next_level0()
 
