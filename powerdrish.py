@@ -24,7 +24,7 @@ def tutorial_lev():
     window.fill(WHITE)
     window.blit(tutorial, (0, 0))
     player.update()
-    monster1.horizontally_update(0, win_width)
+    monster1.update(0, win_width)
 
     # отрисовка
     monster1.reset()
@@ -47,7 +47,7 @@ def forest_lev():
     player_x, player_y = 150, win_height/2
     goal_x, goal_y = win_width-150, win_height/2
     player.update()
-    monster1.vertically_update(0, win_height)
+    monster1.update(0, win_height)
 
     # отрисовка
     monster1.reset()
@@ -71,8 +71,8 @@ def egept_lev():
     player_x, player_y = 150, win_height/2
     goal_x, goal_y = win_width-150, win_height/2
     player.update()
-    monster1.vertically_update(0, win_height)
-    monster2.horizontally_update(0, win_width)
+    monster1.update(0, win_height)
+    monster2.update(0, win_width)
 
     # отрисовка
     monster1.reset()
