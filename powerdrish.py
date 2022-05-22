@@ -1,5 +1,6 @@
 from pygame import *
 font.init()
+from random import randint
 
 
 WHITE = (255, 255, 255)
@@ -155,9 +156,21 @@ class Enemy(GameSprite):
     # метод для автоматического управления ботов
     direction_x = "left"
     direction_y = "up"
-    # горризонтальное передвижение
-    def horizontally_update(self, start_pos, end_pos):
-        if self.rect.left <= start_pos:
+    # передвижение
+    def update(self, start_pos, end_pos):
+        change_direction = randint(1,2) # for random changing direction of sprite, on x
+        if change_direction == 1:
+            direction_x = 'left'
+        else: # simp, yeah
+            direction_x = 'right'
+        
+        change_direction = randint(1,2) # on y
+        if change_direction == 1:
+            direction_y = 'up'
+        else:
+            direction_y = 'down'
+
+        if self.rect.left <= start_pos: # i really wish it'll work
             self.direction_x = "right"
         if self.rect.right >= end_pos:
             self.direction_x = "left"
@@ -166,17 +179,7 @@ class Enemy(GameSprite):
         else:
             self.rect.x += self.speedx
 
-    # вертикальне передвижение
-    def vertically_update(self, start_pos, end_pos):
-        if self.rect.top <= start_pos:
-            self.direction_y = "down"
-        if self.rect.bottom >= end_pos:
-            self.direction_y = "up"
-        if self.direction_y == 'up':
-            self.rect.y -= self.speedy
-        else:
-            self.rect.y += self.speedy
-
+        
     # смерть
     def kill(self):
         global finish, killing
