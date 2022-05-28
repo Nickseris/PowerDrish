@@ -1,5 +1,12 @@
 from pygame import *
 font.init()
+# дань, сорян, что так вышло, что я ничего не сделал за все это время... мне очень стыдно :(
+# сейчас я просто чтобы на следующем занятии что-то сказать, добавлю музычку. 
+mixer.init()
+mixer.music.load('bg-music.mp3')
+mixer.music.play()
+hitsound = mixer.Sound('hitsound.mp3')
+loose_hinsound = mixer.Sound('loose-hitsound.mp3')
 
 
 WHITE = (255, 255, 255)
@@ -138,6 +145,7 @@ class GameSprite(sprite.Sprite):
             check = True
             for_keys = True
             window.blit(win, (215, win_height/2))
+            hitsound.play()
 
 
 # класс главного игрока
@@ -187,6 +195,7 @@ class Enemy(GameSprite):
             killing = True
             finish = True
             window.blit(lose, (215, win_height/2))
+            loose_hinsound.play()
             
 # настройки игры
 win_width = 700
